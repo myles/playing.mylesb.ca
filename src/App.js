@@ -1,5 +1,19 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
+
+const pulseAnimation = keyframes`
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+`;
 
 const TrackList = styled.div`
   display: flex;
@@ -10,12 +24,20 @@ const TrackList = styled.div`
 
 const Track = styled.div`
   display: block;
+  background-color: rgb(0, 0, 0, 50%);
   text-align: center;
-  margin-right: 2rem;
+  margin: 25px 15px;
   max-width: 300px;
+  padding-bottom: 5px;
+
+  ${props => props.nowplaying && css`
+    animation: ${pulseAnimation} 2s linear infinite;
+  `}
 `;
 
-const TrackImage = styled.img``;
+const TrackImage = styled.img`
+  margin-bottom: 5px;
+`;
 
 const TrackBody = styled.div`
   max-width: 275px;
@@ -56,7 +78,7 @@ class App extends Component {
     return (
       <TrackList>
         {this.state.playing.map(function(track, index) {
-          return <Track key={index}>
+          return <Track key={index} nowplaying={track["@attr"] ? true : false}>
             <TrackImage src={track.image[3]["#text"]} />
             <TrackBody>
               <TrackName>{track.name}</TrackName>
